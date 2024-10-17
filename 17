@@ -1,0 +1,293 @@
+exception
+
+aspx code
+<body>
+ <form id="form1" runat="server">
+ <div>
+ <asp:Label ID="lbl1" runat="server" Text="Enter your age : "></asp:Label>
+ <asp:TextBox ID="TextBox1" runat="server" TextMode="Number"></asp:TextBox>
+ <asp:Button ID="Button1" runat="server" OnClick="Button1_Click" Text="Submit" />
+ <br />
+ <asp:Label ID="lbl2" runat="server"></asp:Label>
+ <br />
+ <asp:Label ID="Label1" runat="server" Text="PRANAY T019"></asp:Label>
+ </div>
+ </form>
+</body>
+
+   
+.cs code
+
+namespace pracexam
+{
+ public class InvalidAgeException : Exception
+ {
+ public InvalidAgeException(String message) : base(message)
+ {
+ }
+ }
+ public partial class WebForm1 : System.Web.UI.Page
+ {
+ protected void Page_Load(object sender, EventArgs e)
+ {
+ }
+ protected void Button1_Click(object sender, EventArgs e)
+42
+ {
+ int a = Convert.ToInt32(TextBox1.Text);
+ void validate(int age)
+ {
+ if(age < 18)
+ {
+ throw new InvalidAgeException("Sorry Age must be greater than 18");
+ }
+ else
+ {
+ lbl2.Text = "Valid!!!";
+ }
+ }
+ try
+ {
+ validate(a);
+ }
+ catch(InvalidAgeException ex) 
+ { 
+ lbl2.Text = Convert.ToString(ex);
+ }
+ }
+ }
+}
+
+
+database
+
+WebForm1.cs 
+
+namespace prac
+{
+ public partial class WebForm1 : System.Web.UI.Page
+ {
+ protected void Page_Load(object sender, EventArgs e)
+ {
+ SqlConnection con = new SqlConnection();
+ con.ConnectionString = "Data 
+Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\itlab\\OneDrive\\Documents\\PRA
+NAT_T019.mdf;Integrated Security=True;Connect Timeout=30";
+ con.Open();
+ SqlCommand cmd = new SqlCommand("select * from Students",con);
+ DataSet ds = new DataSet();
+ SqlDataAdapter ad = new SqlDataAdapter(cmd);
+ ad.Fill(ds);
+ GridView1.DataSource = ds.Tables[0];
+ GridView1.DataBind();
+ }
+ protected void insert_Click(object sender, EventArgs e)
+ {
+ SqlConnection con = new SqlConnection();
+ con.ConnectionString = "Data 
+Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\itlab\\OneDrive\\Documents\\
+PRANAT_T019.mdf;Integrated Security=True;Connect Timeout=30";
+ con.Open();
+ SqlCommand cmd = new SqlCommand("insert into Students(id, name) values('" + id.Text + "', 
+'" + name.Text + "')", con);
+ cmd.ExecuteNonQuery();
+ con.Close();
+ }
+ protected void update_Click(object sender, EventArgs e)
+ {
+ SqlConnection con = new SqlConnection();
+ con.ConnectionString = "Data 
+Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\itlab\\OneDrive\\Documents\\
+PRANAT_T019.mdf;Integrated Security=True;Connect Timeout=30";
+
+ con.Open();
+ SqlCommand cmd = new SqlCommand("update Students set name='"+name.Text+"' where 
+id='"+id.Text+"'", con);
+ cmd.ExecuteNonQuery();
+ con.Close();
+ }
+ protected void delete_Click(object sender, EventArgs e)
+ {
+ SqlConnection con = new SqlConnection();
+ con.ConnectionString = "Data 
+Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\itlab\\OneDrive\\Documents\\
+PRANAT_T019.mdf;Integrated Security=True;Connect Timeout=30";
+ con.Open();
+ SqlCommand cmd = new SqlCommand("delete from students where id='"+id.Text+"'", con);
+ cmd.ExecuteNonQuery();
+ con.Close();
+ }
+ protected void reset_Click(object sender, EventArgs e)
+ {
+ id.Text = "";
+ name.Text = "";
+ }
+ }
+}
+WebForm1.aspx
+ <form id="form1" runat="server">
+ <div>
+ Enter your ID : <asp:TextBox ID="id" runat="server" ></asp:TextBox>
+ <br />
+ Enter your name : <asp:TextBox ID="name" runat="server" ></asp:TextBox>
+ <asp:Button ID="insert" runat="server" OnClick="insert_Click" Text="Insert" />
+ <asp:Button ID="update" runat="server" OnClick="update_Click" Text="Update" />
+ <asp:Button ID="delete" runat="server" OnClick="delete_Click" Text="Delete" />
+ <asp:Button ID="reset" runat="server" OnClick="reset_Click" Text="Reset" />
+ <asp:GridView ID="GridView1" runat="server" EnableModelValidation="True" 
+Width="262px">
+ </asp:GridView>
+ </div>
+ </form>
+
+inheritance
+
+using System;
+interface IPolygon
+{
+ void calc(int l, int b);
+}
+internal class Rectangle : IPolygon
+{
+ public void calc(int l, int b)
+ {
+ int area = l * b;
+ Console.WriteLine("Area of rectangle: " + area);
+ Console.WriteLine("PRANAY T019");
+ }
+}
+internal class Program
+{
+ static void Main(string[] args)
+ {
+ Rectangle r1 = new Rectangle();
+ r1.calc(100, 200);
+ Console.ReadKey();
+ }
+}
+onclick visit count 
+
+WebForm1.aspx
+
+
+namespace Prac_5_C
+{
+ public partial class WebForm1 : System.Web.UI.Page
+ {
+ protected void Page_Load(object sender, EventArgs e)
+ {
+ if (IsPostBack)
+ {
+ int ViewStateVal = Convert.ToInt32(ViewState["count"]) + 1;
+ Label2.Text = "View State = " + ViewStateVal.ToString();
+ }
+ else
+ {
+ ViewState["count"] = 1;
+ }
+ }
+ protected void Button1_Click(object sender, EventArgs e)
+ {
+ Label1.Text = "State Count = " + ViewState["count"].ToString();
+ }
+ protected void Button2_Click(object sender, EventArgs e)
+ {
+ HttpCookie h = new HttpCookie("cookie");
+ h.Value = TextBox1.Text;
+ Response.Cookies.Add(h);
+ Response.Redirect("WebForm2.aspx");
+ }
+ }
+}
+
+
+WebForm2.aspx
+
+
+namespace Prac_5_C
+{
+ public partial class WebForm2 : System.Web.UI.Page
+ {
+ protected void Page_Load(object sender, EventArgs e)
+ {
+ if (Request.Cookies["cookie"] != null)
+ {
+ Response.Write("Welcome " + Request.Cookies["cookie"].Value);
+ }
+ }
+ }
+}
+
+boxing 
+
+using System;
+namespace boxing
+{
+ class Program
+ {
+ static void Main(string[] args)
+ {
+ int num = 17;
+ object obj = num;
+ int num1 = (int) obj;
+ Console.WriteLine("Boxing: {0}", obj);
+ Console.WriteLine("Unboxing: {0}", num1);
+ Console.WriteLine("PRANAY T019");
+ Console.ReadKey();
+ }
+ }
+}
+
+i. Generate Fibonacci series. 
+using System;
+namespace Practical_1
+{
+ internal class Program
+ {
+ static void Main(string[] args)
+ {
+ int a = 0, b = 1;
+ int num, c;
+ Console.Write("Enter your limit: ");
+ num = Convert.ToInt32(Console.ReadLine());
+ Console.Write(a + " " + b);
+ for (int i = 1; i < num; i++)
+ {
+ c = a + b;
+ Console.Write(" " + c);
+ a = b;
+ b = c;
+ }
+ Console.WriteLine("\nPRANAY T019");
+ Console.ReadKey();
+ }
+ }
+}
+
+i. Generate Fibonacci series. 
+using System;
+namespace Practical_1
+{
+ internal class Program
+ {
+ static void Main(string[] args)
+ {
+ int a = 0, b = 1;
+ int num, c;
+ Console.Write("Enter your limit: ");
+ num = Convert.ToInt32(Console.ReadLine());
+ Console.Write(a + " " + b);
+ for (int i = 1; i < num; i++)
+ {
+ c = a + b;
+ Console.Write(" " + c);
+ a = b;
+ b = c;
+ }
+ Console.WriteLine("\nPRANAY T019");
+ Console.ReadKey();
+ }
+ }
+}
+
+
